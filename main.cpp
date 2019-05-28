@@ -7,23 +7,24 @@ using namespace std;
 
 void InputLine(char szStr[], const int n);
 int StrLen(char szStr[]);		//Определить длину строки символов.DONE
-void UpperCase(char szStr[]);	//Переводит строку в верхний регистр.
-void LowerCase(char szStr[]);	//Переводит строку в нижний  регистр.
-void Capitalize(char szStr[]);  //Первая буква каждого слова в предложении делается заглавной
-void ASCII();
-bool isLowLetter(char symbol);
-bool isLowRusLetter(char symbol);
-void Shrink(char szStr[]);		//Удаляет лишние пробелы между словами в предложении.
-void RemoveSpaces(char szStr[]);
-bool isPalindrome(char szStr[]);	//Проверяет, является ли данная строка палиндромом.
-bool isNumber(char szStr[]);	//Проверяет, является строка числом. Строка является числом, если содержит только цифры.
-int stringToInt(char szStr[]);
-bool isHexNumber(char szStr[]);	//Проверяет, является строка шестнадцатеричным числом. Строка является Hex-числом, если содержит только цифры и буквы ABCDEF либо abcdef.
-int  Bin2Dec(char szStr[]);
-int  Hex2Dec(char szStr[]);
+void UpperCase(char szStr[]);	//Переводит строку в верхний регистр.DONE
+void LowerCase(char szStr[]);	//Переводит строку в нижний  регистр.DONE
+void Capitalize(char szStr[]);  //Первая буква каждого слова в предложении делается заглавной.DONE
+void ASCII();//DONE
+bool isLowLetter(char symbol);//DONE
+bool isLowRusLetter(char symbol);//DONE
+void Shrink(char szStr[]);		//Удаляет лишние пробелы между словами в предложении.DONE
+void RemoveSpaces(char szStr[]);//DONE
+bool isPalindrome(char szStr[]);	//Проверяет, является ли данная строка палиндромом.DONE
+bool isNumber(char szStr[]);	//Проверяет, является строка числом. Строка является числом, если содержит только цифры.DONE
+int stringToInt(char szStr[]);//DONE
+bool isHexNumber(char szStr[]);	//Проверяет, является строка шестнадцатеричным числом. Строка является Hex-числом, если содержит только цифры и буквы ABCDEF либо abcdef.DONE
+bool isBinNumber(char szStr[]);//DONE
+int  Bin2Dec(char szStr[]);//DONE
+int  Hex2Dec(char szStr[]);//вроде DONE
 void main()
 {
-	setlocale(LC_ALL, "");
+	//setlocale(LC_ALL, "");
 	system("CHCP 1251");
 	system("CLS");
 	/*char szStr[] = {'H', 'e', 'l', 'l', 0};
@@ -41,7 +42,12 @@ void main()
 	//cout << isPalindrome(szStr) << endl;
 	//cout << isNumber(szStr) << endl;
 	//cout << stringToInt(szStr) << endl;
-	cout << isHexNumber(szStr) << endl;
+	//cout << isHexNumber(szStr) << endl;
+	//cout << isBinNumber(szStr) << endl;
+	//ASCII();
+	cout << "Количество елементов строки: " << StrLen(szStr) << endl;
+	cout << "Bin to Decimal: " << Bin2Dec(szStr) << endl;
+	cout << "Hex to Decimal: " << Hex2Dec(szStr) << endl;
 
 
 
@@ -215,8 +221,31 @@ bool isHexNumber(char szStr[])
 {
 	for (int i = 0; szStr[i]; i++)
 	{
-		if ((szStr[i]<'0' || szStr[i]>'9')&&szStr[i]!='-'&&szStr[i]!='+'&&((szStr[i]<'a'&&szStr[i]>'f')|| (szStr[i] < 'A'&&szStr[i] > 'F')))return false;
+		if (!(szStr[i] >= '0'&&szStr[i] <= '9') &&
+			!(szStr[i] >= 'A'&&szStr[i] <= 'F') &&
+			!(szStr[i] >= 'a'&&szStr[i] <= 'f')
+			)return false;
 	}
+	return true;
+}
+bool isBinNumber(char szStr[])
+{
+	int n = StrLen(szStr);
+	char* Buffer = new char[n + 1]{};
+	for (int i = 0; szStr[i]; i++)
+	{
+		Buffer[i] = szStr[i];
+	}
+	RemoveSpaces(Buffer);
+	for (int i = 0; Buffer[i]; i++)
+	{
+		if (Buffer[i] != '0' && Buffer[i] != '1')
+		{
+			delete[] Buffer;
+			return false;
+		}
+	}
+	delete[] Buffer;
 	return true;
 }
 int stringToInt(char szStr[])
@@ -224,7 +253,7 @@ int stringToInt(char szStr[])
 	if (!isNumber(szStr))return 0;
 	int decimal = 0;
 	int i = 0;
-	if (szStr[0] == '-'|| szStr[0] == '+')i++;
+	if (szStr[0] == '-' || szStr[0] == '+')i++;
 	for (; szStr[i]; i++)
 	{
 		decimal *= 10;
@@ -233,4 +262,53 @@ int stringToInt(char szStr[])
 	}
 	if (szStr[0] == '-')decimal = -decimal;
 	return decimal;
+}
+int  Bin2Dec(char szStr[])
+{
+	if (!isBinNumber(szStr))
+	{
+		cout << "Error: not binary" << endl;
+		return 0;
+	}
+	int n = StrLen(szStr);
+	int Dec = 0;
+	int step = 1;
+	for (int i = n - 1; i >= 0; i--)
+	{
+		if (szStr[i] == ' ')continue;
+		Dec += (szStr[i] - 48) * step;
+		step *= 2;
+	}
+	return Dec;
+
+}
+int  Hex2Dec(char szStr[])
+{
+	if (!isHexNumber(szStr))
+	{
+		cout << "Error: not Hex" << endl;
+		return 0;
+	}
+	int n = StrLen(szStr);
+	char* Buffer = new char[n + 1]{};
+	for (int i = 0; szStr[i]; i++)
+	{
+		Buffer[i] = szStr[i];
+	}
+	for (int i = 0; Buffer[i]; i++)
+	{
+		if (Buffer[i] >= 'A'&&Buffer[i] <= 'F')Buffer[i] = Buffer[i] - 7;
+		if (Buffer[i] >= 'a'&&Buffer[i] <= 'f')Buffer[i] = Buffer[i] - 39;
+	}
+	int Dec = 0;
+	int step = 1;
+	for (int i = n - 1; i >= 0; i--)
+	{
+
+		if (Buffer[i] == ' ')continue;
+		Dec += (Buffer[i] - 48) * step;
+		step *= 16;
+	}
+	return Dec;
+
 }
