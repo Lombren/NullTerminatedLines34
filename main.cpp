@@ -289,7 +289,7 @@ int  Hex2Dec(char szStr[])
 		cout << "Error: not Hex" << endl;
 		return 0;
 	}
-	int n = StrLen(szStr);
+	/*int n = StrLen(szStr);
 	char* Buffer = new char[n + 1]{};
 	for (int i = 0; szStr[i]; i++)
 	{
@@ -308,6 +308,13 @@ int  Hex2Dec(char szStr[])
 		if (Buffer[i] == ' ')continue;
 		Dec += (Buffer[i] - 48) * step;
 		step *= 16;
+	}*/
+	int Dec = 0;
+	int weight = 1;
+	for (int i = StrLen(szStr) - 1; i >= 0; i--)
+	{
+		Dec += (szStr[i] > 'a' ? szStr[i] - 87 : szStr[i] > 'A' ? szStr[i] - 55 : szStr[i] - 48)*weight;
+		weight *= 16;
 	}
 	return Dec;
 
